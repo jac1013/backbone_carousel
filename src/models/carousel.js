@@ -1,16 +1,16 @@
 	var Carousel;
 
 	// I love to use an instantaneous ran function (anonymous function)
-// to have all the functionality of the app private, this also help us
-// to only expose what we want, for example we could delete all the lines
-// above and declared them inside of the inner function and the app
-// will still works, I let them outside to expose the backbone code
-// but this is not necessary I just write it above to explain this.
+	// to have all the functionality of the app private, this also help us
+	// to only expose what we want, for example we could delete all the lines
+	// above and declared them inside of the inner function and the app
+	// will still works, I let them outside to expose the backbone code
+	// but this is not necessary I just write it above to explain this.
 	(function() {
 		// This is the model that contains what the collection fetched
 		// It is also responsible for almost most of the logic of the app
 		// via triggering, this is called event-driven development.
-		 Carousel = Backbone.Model.extend({
+		Carousel = Backbone.Model.extend({
 
 			initialize: function() {
 				this.currentModel = 0;

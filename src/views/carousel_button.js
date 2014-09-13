@@ -1,6 +1,4 @@
 var CarouselButtons;
-var CarouselContainer;
-var CarouselBlocks;
 
 (function() {
 
@@ -71,65 +69,5 @@ var CarouselBlocks;
 		button.removeClass();
 		button.addClass('disabled');
 	};
-
-	//This is basically the container of the Carousel, here we manage
-	// the transition process
-	CarouselContainer = Backbone.View.extend({
-		el: '.carousel_container ul',
-
-
-		initialize: function() {
-			this.currentPixels = 0;
-			this.listenTo(this.model, 'showNext', this.showNext);
-			this.listenTo(this.model, 'showPrevious', this.showPrevious);
-			this.listenTo(this.model, 'collectionReady', this.removeLoadingScreen);
-		},
-
-
-		slide: function(pixels) {
-			$('.carousel_container ul').animate({
-				marginLeft: pixels
-			}, 1500);
-		},
-
-		showPrevious: function() {
-			this.currentPixels += IMAGES_WIDTH;
-			this.slide(this.currentPixels);
-		},
-
-		showNext: function() {
-			this.currentPixels -= IMAGES_WIDTH;
-			this.slide(this.currentPixels);
-		},
-
-		removeLoadingScreen: function() {
-			$('.carouselCollection').css('background-color', '#000000');
-			$('#floatingBarsG').hide();
-		}
-	});
-
-	//Here we render every li with its random image.
-	CarouselBlocks = Backbone.View.extend({
-		tagName: 'li',
-
-		initialize: function() {
-			this.listenTo(this.model, 'collectionReady', this.render);
-		},
-
-		template: _.template('<img src="<%= image %>" alt="">'),
-
-		render: function() {
-			var self = this;
-			_.each(carouselCollection.models, function(model) {
-				model.chooseARandomImage();
-				self.$el.html(self.template(model.toJSON()));
-				carouselContainer.$el.append(self.$el.html());
-
-			});
-			$('.carousel_container').fadeOut(0);
-			$('.carousel_container').fadeIn(1000);
-
-		}
-	});
 
 }());
