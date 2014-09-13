@@ -24,7 +24,9 @@ var CarouselBlocks;
 	var NEXT = 'next';
 	var PREVIOUS = 'previous';
 	var LEFT = 'left';
+	var INITIAL_STATE = 'initialState';
 	var IMAGES_WIDTH = 935;
+	var SERVER_TIME_EMULATION = 3000;
 
 	// This is the model that contains what the collection fetched
 	// It is also responsible for almost most of the logic of the app
@@ -78,7 +80,9 @@ var CarouselBlocks;
 		initialize: function() {
 			this.listenTo(this.model, 'edgeCarousel', this.changeButtonState);
 			this.listenTo(this.model, 'notInEdgeAnymore', this.changeButtonState);
-			disablePreviousButton();
+			this.listenTo(this.model, 'collectionReady', this.changeButtonState);
+			disableButton('previous');
+			disableButton('next');
 
 		},
 
@@ -96,12 +100,15 @@ var CarouselBlocks;
 		changeButtonState: function(whichButton) {
 			switch (whichButton) {
 				case NEXT:
-					$('#next').prop('disabled', true);
-					$('#next').removeClass();
-					$('#next').addClass('disabled');
+					disableButton('next');
 					break;
 				case PREVIOUS:
-					disablePreviousButton();
+					disableButton('previous');
+					break;
+				case INITIAL_STATE: 
+					$('#next').removeClass();
+					$('#next').prop('disabled', false);
+					$('#next').addClass(NEXT);
 					break;
 				default:
 					$('#previous').removeClass();
@@ -120,10 +127,11 @@ var CarouselBlocks;
 	// I just created outside to show how to use private functions with
 	// backbone, sometimes we need 'helpers' function that doesn't fit
 	// in any of our Backbone code so this is the elegant way to do it
-	var disablePreviousButton = function(){
-		$('#previous').prop('disabled', true);
-		$('#previous').removeClass();
-		$('#previous').addClass('disabled');
+	var disableButton = function(id) {
+		var button = $('#'+id);
+		button.prop('disabled', true);
+		button.removeClass();
+		button.addClass('disabled');
 	}
 
 	//This is basically the container of the Carousel, here we manage
@@ -136,13 +144,14 @@ var CarouselBlocks;
 			this.currentPixels = 0;
 			this.listenTo(this.model, 'showNext', this.showNext);
 			this.listenTo(this.model, 'showPrevious', this.showPrevious);
+			this.listenTo(this.model, 'collectionReady', this.removeLoadingScreen);
 		},
 
 
 		slide: function(pixels) {
 			$('.carousel_container ul').animate({
 				marginLeft: pixels
-			}, 2000);
+			}, 1500);
 		},
 
 		showPrevious: function() {
@@ -153,6 +162,11 @@ var CarouselBlocks;
 		showNext: function() {
 			this.currentPixels -= IMAGES_WIDTH;
 			this.slide(this.currentPixels);
+		},
+
+		removeLoadingScreen: function(){
+			$('.carouselCollection').css('background-color', '#000000');
+			$('#floatingBarsG').hide();
 		}
 	});
 
@@ -174,8 +188,8 @@ var CarouselBlocks;
 				carouselContainer.$el.append(self.$el.html());
 
 			});
-			$('.carousel_container').hide();
-			$('.carousel_container').show(1000);
+			$('.carousel_container').fadeOut(0);
+			$('.carousel_container').fadeIn(1000);
 
 
 		}
@@ -210,7 +224,8 @@ var CarouselBlocks;
 			//the timeout is to emulate the delay of the server.
 			setTimeout(function() {
 				self.trigger('collectionReady');
-			}, 500);
+				carouselModel.trigger('collectionReady', 'initialState');
+			}, SERVER_TIME_EMULATION);
 		}
 
 	});
