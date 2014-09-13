@@ -146,14 +146,14 @@
 	}
 	.button_container {
 	    height: 50px;
-	    margin-left: 42%;
+	    margin-left: 37%;
 	    margin-top: 2%;
 	}
 	.carousel_container {
 	    height: 400px;
 	    width: 932px;
 	    overflow: hidden;
-	    margin: 0 auto;
+	    margin-left: 10px;
 	}
 	.carousel_container ul {
 	    width: 3740px;
@@ -166,7 +166,7 @@
 	    float: left;
 	}
 	#modal {
-	    width: 100%;
+	    width: 75%;
 	    height: 550px;
 	    border: 1px solid #CCC;
 	    box-shadow: 0 1px 5px #CCC;
@@ -201,7 +201,7 @@
 	}
 	#floatingBarsG {
 	    position: relative;
-	    left: 45%;
+	    left: 47%;
 	    top: 40%;
 	    width: 62px;
 	    height: 77px
